@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  shop:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    tty: true
+    working_dir: /usr/src/shop_back
+    ports:
+      - 3000:3000
+    volumes:
+      - "./:/usr/src/shop_back"
+    networks:
+      - default
+    depends_on:
+      - mysqlShop
+
+  mysqlShop:
+    image: mysql:5.7
+    restart: unless-stopped
+    tty: true
+    ports:
+           - '3307:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: diplom2022
+      MYSQL_DATABASE: shop
+    volumes:
+      - "shop:/var/lib/mysqlshop/"
+    networks:
+      - default
+
+volumes:
+  shop:
